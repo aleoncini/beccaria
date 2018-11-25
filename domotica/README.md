@@ -8,5 +8,6 @@ The modules of the application are:
 - rules
 - timers
 - auditing
+
 Within the application modules are organized in packages, in the cloud section the modules will be different authonomous micro services.
 Only the **core** module, which contains the data model and other common utils, is referenced by the other modules.

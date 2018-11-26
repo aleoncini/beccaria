@@ -54,13 +54,18 @@
       <artifactId>jaxrs</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.thorntail</groupId>
+      <artifactId>microprofile-restclient</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.7.21</version>
     </dependency>
     <dependency>
-      <groupId>io.thorntail</groupId>
-      <artifactId>microprofile-restclient</artifactId>
+      <groupId>org.mongodb</groupId>
+      <artifactId>bson</artifactId>
+      <version>3.9.0</version>
     </dependency>
   </dependencies>
 

@@ -37,3 +37,4 @@ activemq-data
 
 # Extra #
 #########
+telegram/src/main/resources/application.properties

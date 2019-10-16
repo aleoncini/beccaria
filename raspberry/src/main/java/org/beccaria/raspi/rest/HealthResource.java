@@ -11,6 +11,6 @@ public class HealthResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response healthCheck() {
-        return Response.ok("ok\n").build();
+        return Response.ok("ok").build();
     }
 }

@@ -30,21 +30,21 @@ public class ControllerResource {
     @Path("{id}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getStatus(@PathParam("id") int pinNumber) {
-        return Response.ok(board.status(pinNumber) + "\n").build();
+        return Response.ok(board.status(pinNumber) + "").build();
     }
 
     @GET
     @Path("{id}/on")
     @Produces(MediaType.TEXT_PLAIN)
     public Response setOn(@PathParam("id") int pinNumber) {
-        return Response.ok(board.on(pinNumber) + "\n").build();
+        return Response.ok(board.on(pinNumber) + "").build();
     }
 
     @GET
     @Path("{id}/off")
     @Produces(MediaType.TEXT_PLAIN)
     public Response setOff(@PathParam("id") int pinNumber) {
-        return Response.ok(board.off(pinNumber) + "\n").build();
+        return Response.ok(board.off(pinNumber) + "").build();
     }
 
 }

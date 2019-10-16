@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("ctrl")
@@ -27,21 +28,21 @@ public class ControllerResource {
 
     @GET
     @Path("{id}")
-    @Produces("application/json")
+    @Produces(MediaType.TEXT_PLAIN)
     public Response getStatus(@PathParam("id") int pinNumber) {
         return Response.ok(board.status(pinNumber) + "\n").build();
     }
 
     @GET
     @Path("{id}/on")
-    @Produces("application/json")
+    @Produces(MediaType.TEXT_PLAIN)
     public Response setOn(@PathParam("id") int pinNumber) {
         return Response.ok(board.on(pinNumber) + "\n").build();
     }
 
     @GET
     @Path("{id}/off")
-    @Produces("application/json")
+    @Produces(MediaType.TEXT_PLAIN)
     public Response setOff(@PathParam("id") int pinNumber) {
         return Response.ok(board.off(pinNumber) + "\n").build();
     }

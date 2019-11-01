@@ -3,6 +3,7 @@ package org.domotica.configuration.rest;
 import org.domotica.core.model.Configuration;
 import org.domotica.core.model.Timer;
 import org.domotica.core.util.CoreUtils;
+import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,11 @@ public class TimerService {
     }
 
     private Response startAll() {
-        CoreUtils.startTimers(config);
+        try {
+            CoreUtils.startTimers(config);
+        } catch (SchedulerException e) {
+            logger.warn("[TimerService] problem while starting timers: " + e.getLocalizedMessage());
+        }
         return Response.status(200).entity(CoreUtils.listToString("timers", config.getTimers())).build();
     }
 

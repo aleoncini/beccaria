@@ -8,13 +8,15 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/device")
-public class DeviceService {
+@Path("/dashboard")
+public class DashBoard {
     private static final Logger logger = LoggerFactory.getLogger("org.beccaria.domotica");
 
     @Inject
@@ -32,20 +34,17 @@ public class DeviceService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("list")
+    @Path("devlist")
     public Response list() {
+        // id, nome e stato
         List<Device> devices = config.getDevices();
-
-        if ((devices == null) || (devices.size() == 0)){
-            return Response.status(404).build();
-        }
 
         StringBuffer buffer = new StringBuffer("{\"devices\": [");
 
         boolean notFirstElement = false;
         for (Device dev: devices) {
             if (notFirstElement) buffer.append(", ");
-            buffer.append(dev.toString());
+            buffer.append(getDashBoardInfo(dev));
             notFirstElement = true;
         }
         buffer.append(" ] }");
@@ -53,29 +52,17 @@ public class DeviceService {
         return Response.ok().entity(buffer.toString()).build();
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("{id}")
-    public Response doGet(@PathParam("id")String id, @QueryParam("value") String val) {
-        String result = null;
-        Device device = config.getDevice(id);
-        if (device == null){
-            return Response.status(404).build();
-        }
-
-        String baseUrl = config.getDeviceUrl(id);
-        if (baseUrl == null){
-            return Response.status(404).build();
-        }
-
-        StringBuffer url = new StringBuffer(baseUrl);
-        if (val != null){
-            url.append("/").append(val);
-        }
-
-        result = new ControllerClient().setUrl(url.toString()).invoke();
-
-        logger.info("[ControllerProxyService] result: " + result);
-        return Response.status(200).entity(result).build();
+    private String getDashBoardInfo(Device device){
+        String devUrl = config.getDeviceUrl(device.getId());
+        String status = new ControllerClient().setUrl(devUrl).getStatus();
+        logger.info("================> " + status);
+        device.setStatus(status);
+        StringBuffer buffer = new StringBuffer("{");
+        buffer.append("\"id\":\"").append(device.getId()).append("\",");
+        buffer.append("\"name\":\"").append(device.getName()).append("\",");
+        buffer.append("\"status\":\"").append(device.getStatus()).append("\"");
+        buffer.append("}");
+        return buffer.toString();
     }
+
 }

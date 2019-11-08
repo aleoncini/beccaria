@@ -1,6 +1,9 @@
 package org.domotica.core.model;
 
 import org.domotica.core.util.CoreUtils;
+import org.domotica.metering.SwitchMeter;
+import org.domotica.monitoring.temperature.TemperatureCache;
+import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,12 +23,32 @@ public class StartupObserver {
     @Named("config")
     private Configuration config;
 
+    @Inject
+    @Named("tcache")
+    private TemperatureCache tcache;
+
+    @Inject
+    @Named("switch_meter")
+    private SwitchMeter meter;
+
     public void init(@Observes @Initialized(ApplicationScoped.class) Object init) {
         logger.info("[Startup] ==================== initializing application...");
         logger.info("[Startup] ==================== loading config...");
         loadConfiguration();
         logger.info("[Startup] ==================== starting timers...");
-        CoreUtils.startTimers(config);
+        try {
+            CoreUtils.startTimers(config);
+        } catch (SchedulerException e) {
+            logger.warn("[Startup] problem while starting timers: " + e.getLocalizedMessage());
+        }
+        logger.info("[Startup] ==================== starting monitoring...");
+        CoreUtils.startMonitoring(tcache);
+        logger.info("[Startup] ==================== starting metering...");
+        try {
+            CoreUtils.startMeters(config, meter);
+        } catch (SchedulerException e) {
+            logger.warn("[Startup] problem while starting meters: " + e.getLocalizedMessage());
+        }
         logger.info("[Startup] ==================== initialization complete.");
     }
 

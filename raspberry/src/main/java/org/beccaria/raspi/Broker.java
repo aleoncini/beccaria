@@ -51,11 +51,9 @@ public class Broker implements MqttCallback {
             if(pin < 0)return;
             if(! board.isReady)return;
             if (message.endsWith("on")){
-                System.out.println("=======> pin: " +  pin + " switch ON");
                 board.on(pin);
             }
             if (message.endsWith("off")){
-                System.out.println("=======> pin: " +  pin + " switch OFF ");
                 board.off(pin);
             }
         }

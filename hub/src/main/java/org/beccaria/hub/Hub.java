@@ -1,7 +1,7 @@
-package org.beccaria.hub.rest;
+package org.beccaria.hub;
 
-import org.beccaria.hub.messaging.MessagePublisher;
-import org.beccaria.hub.model.HubResult;
+import org.beccaria.hub.MessagePublisher;
+import org.beccaria.hub.HubResult;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

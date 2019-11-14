@@ -1,4 +1,4 @@
-package org.beccaria.hub.model;
+package org.beccaria.hub;
 
 public class HubResult {
     public final static String SUCCESS = "success";

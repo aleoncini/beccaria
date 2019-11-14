@@ -1,4 +1,4 @@
-package org.beccaria.hub.messaging;
+package org.beccaria.hub;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;

@@ -5,5 +5,5 @@ public class BrokerConfig {
     public final static int BROKER_PORT = 1883;
     public final static String COMMANDS_TOPIC = "domotics/commands";
     public final static String CONTROLLERS_TOPIC = "domotics/controllers";
-    public final static String STATUS_TOPIC = "domotics/status";
+    public final static String STATUS_TOPIC = "domotics/values";
 }

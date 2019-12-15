@@ -24,14 +24,28 @@ public class Broker implements MqttCallback {
     }
 
     public void notifyPresence() throws MqttException {
+        this.notify(BrokerConfig.CONTROLLERS_TOPIC, board.serial());
+    }
+
+    public void notifyValues() throws MqttException {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(board.serial());
+        buffer.append("/").append(board.status(0));
+        buffer.append("/").append(board.status(1));
+        buffer.append("/").append(board.status(2));
+        buffer.append("/").append(board.status(3));
+        this.notify(BrokerConfig.VALUES_TOPIC, buffer.toString());
+    }
+
+    public void notify(String topic, String message) throws MqttException {
         String broker_url = "tcp://" + BrokerConfig.BROKER_HOST + ":" + BrokerConfig.BROKER_PORT;
         MqttClient client = new MqttClient(broker_url, "domus.raspi", persistence);
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setCleanSession(true);
         client.connect(mqttConnectOptions);
-        MqttMessage message = new MqttMessage(board.serial().getBytes());
-        message.setQos(0);
-        client.publish(BrokerConfig.CONTROLLERS_TOPIC, message);
+        MqttMessage mqttMessage = new MqttMessage(message.getBytes());
+        mqttMessage.setQos(0);
+        client.publish(topic, mqttMessage);
         client.disconnect();
     }
 
@@ -44,6 +58,10 @@ public class Broker implements MqttCallback {
         String message = mqttMessage.toString();
         if (message.startsWith("health")){
             notifyPresence();
+            return;
+        }
+        if (message.startsWith("status")){
+            notifyValues();
             return;
         }
         if (message.startsWith(board.serial())){

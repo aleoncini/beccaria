@@ -2,9 +2,7 @@ package org.beccaria.raspi;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -28,6 +26,29 @@ public class RaspiResource {
         buffer.append("{ \"pin\" : 3, ").append("\"state\" : ").append(board.status(3)).append(" } ");
         buffer.append(" ] }");
         return Response.status(200).entity(buffer.toString()).build();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{pin}/{command}")
+    public Response operatePin(@PathParam("pin") int pin, @PathParam("command") String command) {
+        StringBuffer answer = new StringBuffer("{ \"pin\" : ").append(pin).append(", ");
+
+        if ( (pin < 0) || (pin > 3) ){
+            return Response.status(404).build();
+        }
+
+        if ( command.equalsIgnoreCase("on") ){
+            answer.append("\"status\" : ").append(board.on(pin)).append(" }");
+            return Response.status(200).entity(answer.toString()).build();
+        }
+
+        if ( command.equalsIgnoreCase("off") ){
+            answer.append("\"status\" : ").append(board.off(pin)).append(" }");
+            return Response.status(200).entity(answer.toString()).build();
+        }
+
+        return Response.status(404).build();
     }
 
 }

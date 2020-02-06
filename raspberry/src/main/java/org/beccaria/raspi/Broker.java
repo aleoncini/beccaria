@@ -14,9 +14,9 @@ public class Broker implements MqttCallback {
     Board board;
 
     MemoryPersistence persistence = new MemoryPersistence();
+    String broker_url = "tcp://" + BrokerConfig.BROKER_HOST + ":" + BrokerConfig.BROKER_PORT;
 
     public void subscribeToCommands() throws MqttException {
-        String broker_url = "tcp://" + BrokerConfig.BROKER_HOST + ":" + BrokerConfig.BROKER_PORT;
         MqttClient client = new MqttClient(broker_url, this.toString(), persistence);
         client.connect();
         client.setCallback(this);
@@ -38,7 +38,6 @@ public class Broker implements MqttCallback {
     }
 
     public void notify(String topic, String message) throws MqttException {
-        String broker_url = "tcp://" + BrokerConfig.BROKER_HOST + ":" + BrokerConfig.BROKER_PORT;
         MqttClient client = new MqttClient(broker_url, "domus.raspi", persistence);
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setCleanSession(true);
@@ -51,6 +50,12 @@ public class Broker implements MqttCallback {
 
     @Override
     public void connectionLost(Throwable throwable) {
+        System.out.println("==== [ConnectionLost] re-connecting and subscribing to commands topic.");
+        try {
+            this.subscribeToCommands();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
